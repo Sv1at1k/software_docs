@@ -1,0 +1,75 @@
+entity TwitterUser {
+	id Long
+    name String
+    email String required
+    password String
+    birthDate LocalDate
+}
+
+entity City {
+	id Long
+    name String required
+}
+
+entity Country {
+	id Long
+    name String required
+}
+
+entity Message {
+	id Long
+    text String required
+}
+
+entity Tweet {
+	id Long
+    text String required
+    created ZonedDateTime
+    imageUrl String
+}
+
+entity Reply {
+	id Long
+    text String required
+    made ZonedDateTime
+}
+
+entity Like {
+	id Long
+    done ZonedDateTime
+}
+
+entity Hashtag {
+	id Long
+    name String required
+}
+
+entity Retweet {
+	id Long
+}
+
+entity FollowerFollowedBy {
+	id Long
+}
+
+relationship OneToMany {
+	City{users} to TwitterUser{city}
+    Country{cities} to City{country}
+    Tweet{replies} to Reply{tweet}
+    Tweet{likes} to Like{tweet}
+    TwitterUser{tweets} to Tweet{user}
+    TwitterUser{messages} to Message{sender}
+    Tweet{messages} to Message{tweet}
+    TwitterUser{retweets} to Retweet{by}
+    Tweet{retweets} to Retweet{of}
+    TwitterUser{followers} to FollowerFollowedBy{followedBy}
+    TwitterUser{follows} to FollowerFollowedBy{following}
+}
+
+relationship ManyToMany {
+    Tweet{hashtags} to Hashtag{tweets}
+}
+
+filter all 
+paginate all with infinite-scroll
+service all with serviceImpl
